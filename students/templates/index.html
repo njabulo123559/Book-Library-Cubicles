@@ -1,0 +1,317 @@
+{% extends 'basic.html' %}
+{% block title %}Hotel Krishna
+{% endblock title %}
+{% block body %}
+{% load static %}
+
+
+<style>
+    div {
+  margin-bottom: 10px;
+  position: relative;
+}
+
+input[type="number"] {
+  width: 100px;
+}
+
+input + span {
+  padding-right: 30px;
+}
+
+input:invalid + span::after {
+  position: absolute;
+  content: "✖";
+  padding-left: 5px;
+}
+
+input:valid + span::after {
+  position: absolute;
+  content: "✓";
+  padding-left: 5px;
+}
+
+
+footer {
+            background-color: #0687ff;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1170px;
+            margin: auto;
+            
+        }
+
+        .footer-column {
+            width: 30%; /* Adjust the width as needed */
+            text-align: left;
+            margin: 10px;
+            padding: 0 15px;
+        }
+
+        .footer-column h3 {
+            color: #fff;
+        }
+
+        .footer-column p {
+            color: #ccc;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .row{
+            display: flex;
+            flex-wrap:wrap;
+        }
+        ul{
+            list-style: none;
+        }
+
+        .social-icons {
+            display: flex;
+}
+
+        .social-icons a {
+            margin-right: 10px; /* Add spacing between icons as needed */
+}
+.tabs{
+    margin-left: 40px;
+}
+.footer-column .social-icons a{
+    display: inline-block;
+    height: 40px;
+    width:40px;
+    background-color: rgb(255, 255, 255, 0,2);
+    margin: 0 10px 10px 0;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    color: #2e2c2c;
+    transition: all 0.5s ease;
+
+}
+
+.footer-column .social-icons a:hover{
+    color: #24262b;
+    background-color:#f97878 ;
+
+}
+
+
+
+       
+
+</style>
+ <!--Booking Section starts here-->
+<section>
+    <div class="container-fluid py-5 px-5 ">
+        <form action="" method="POST">
+        {% csrf_token %}
+        <div class="row justify-content-center py-5 bg-light">
+            <div class="col-lg-4">
+                <label for="">Location</label>
+                <select class="form-control" name="search_location" id="roomstatus">
+                    <!--Hotel id and location-->
+                    <option>Location</option>
+                    {% for each_location,each_hotel_id in all_location %}
+                        
+                        <option value={{each_hotel_id}}>{{each_location}}</option>
+                    {% endfor %}    
+                    
+                    
+                        
+                </select>
+            </div>
+            {%load app_tags%}
+            <div class="col-lg-2">
+                <label for="">Check in</label>
+                <input class="form-control mr-sm-2" id="appt-time" type="time" name="check_in" min="07:00" max="23:00" required/>
+                <span class="validity"></span>
+                
+            </div>
+            <div class="col-lg-2">
+                <label for="">Check Out</label>
+                <input class="form-control mr-sm-2" id="appt-time" type="time" name="check_out" min="07:00" max="23:00" required/>
+                <span class="validity"></span>
+                
+            </div>
+            <div class="col-lg-2">
+                <label for="">Person</label>
+                <input class="form-control mr-sm-2" type="number" placeholder="Person" name="capacity" aria-label="Search" required="True">
+            </div>
+            <div class="col-lg-2">
+
+                <input type="submit" value="Check Availabilty" class="form-control mr-sm-2 btn btn-primary my-4" style="position: relative;top: 7px;">
+            </div>
+            {% if rooms %}
+            <p class="text-center text-success">Rooms Available</p>
+            {% endif %}
+            
+        </div>
+        </form>
+
+    </div>
+</section>
+<!--Booking Section ends here-->
+<!--Fetched reults appear here-->
+<div class="container-fluid px-0 mx-aut">
+    {% if rooms %}
+       <table class="table">
+           <thead class="o">
+            <th>Type</th>
+            <th>Location</th>
+            <th>Person</th>
+            <th>Course</th>
+            <th>Action</th>
+        </thead>
+        {% for r in rooms %}
+            <tr class="">
+            <td>{{ r.get_room_type_display }}</td>
+            <td>{{ r.hotel.location }}</td>
+            <td>{{ r.capacity }}</td>
+            <td>{{ r.price }}</td>
+            
+            <td><a href="/user/book-room?roomid={{r.id}}"><button class="btn btn-warning">Book Now</button></a></td>
+            </tr>
+        {% endfor %}
+        
+       </table> 
+    {% endif %}
+</div>
+<!--Fetched results ends here-->
+
+
+<h3 class="text-center text-dark">Cubics Types</h3>
+
+    <!--Room tables starts here-->
+    <div class="container-fluid px-0" style="border:1px solid red">
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="text-center">Information</th>
+                    <th class="text-center">View</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">
+                        <!--Room details-->
+                        <h1>Individual Study Cubic</h1>
+                        <p>The Individual Study Cubic provides a quiet and focused environment for solitary studying and research. It's perfect for students who need a distraction-free space.</p>
+
+                        <p>Size :30 meters</p>
+                        <p>Capacity :Max person 1</p>
+
+                        <p>Services :Wifi,Study Desk</p>
+                        <p> Usage Rules: Maintain absolute silence. No food or drinks allowed.</p>
+                    </td>
+                    <td class="text-center">
+                        <!--Room Images-->
+                        <img src="{%static '\WhatsApp Image 2023-09-22 at 17.59.13.jpeg' %}"  style="width: 350px; height: 270px;">
+                    </td>
+
+                </tr>
+
+
+                <tr>
+                    <td class="text-center">
+                        <!--Room details-->
+                        <h1>Group Study Cubic</h1>
+                        <p>The Group Study Cubic is designed for collaborative work and group discussions. It provides an ideal environment for teamwork and brainstorming sessions.</p>
+
+                        <p>Size :30 meters</p>
+                        <p>Capacity :Max person 3</p>
+
+                        <p>Services :Wifi</p>
+                        <p> Usage Rules: Maintain a quiet working environment. No food or drinks allowed.</p>
+                    </td>
+                    <td class="text-center">
+                        <!--Room Images-->
+                        <img src="{%static '\WhatsApp Image 2023-09-22 at 18.00.47.jpeg' %}" style="width: 350px; height:270px;">
+                    </td>
+
+                </tr>
+
+
+
+            </tbody>
+        </table>
+    </div>
+    <!--Roo tables ends here-->
+
+    <!----Footer------->
+    <footer>
+        <div class="container">
+            <!-- Column 1: Contact Information -->
+            <div class="row">
+            <div class="footer-column">
+                <h3>Contact Us</h3>
+                <p>Email: contact@example.com</p>
+                <p>Phone: +1 (123) 456-7890</p>
+                <p>1234 Main St, City, Country</p>
+            </div>
+
+
+
+            <!-- Column 3: Quick Links -->
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <div class="tabs">
+                <a href="#">Home</a>
+                <a href="#">About Us</a>
+                <a href="#">Contact</a>
+                </div>
+            </div>
+
+
+                <!-- Column 2: Social Media Links -->
+                <div class="footer-column">
+                    <h3>Follow Us</h3>
+                    <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- Copyright Notice -->
+        <div class="footer-copyright">
+            <p>&copy; 2023 University of Zululand. All rights reserved.</p>
+        </div>
+    </footer>
+
+ 
+    
+
+    <script>
+        const input = document.createElement("input");
+        input.type = "time";
+        input.min = "23:00";
+        input.max = "01:00";
+        input.value = "23:59";
+
+        if (input.validity.valid && input.type === "time") {
+        // <input type=time> reversed range supported
+    }else {
+        // <input type=time> reversed range unsupported
+}
+
+
+    </script>
+
+
+
+{% endblock body %}

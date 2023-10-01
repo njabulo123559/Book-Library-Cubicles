@@ -1,0 +1,99 @@
+{% extends 'basic.html' %} {% block title %}Book Room {% endblock title %} {% block body %}
+
+<style>
+        div {
+  margin-bottom: 10px;
+  position: relative;
+}
+
+input[type="number"] {
+  width: 100px;
+}
+
+input + span {
+  padding-right: 30px;
+}
+
+input:invalid + span::after {
+  position: absolute;
+  content: "✖";
+  padding-left: 5px;
+}
+
+input:valid + span::after {
+  position: absolute;
+  content: "✓";
+  padding-left: 5px;
+}
+</style>
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-6 col-lg-6 col-xlg-6 col-sm-12 mx-auto my-4 ">
+
+            <form id="myForm"  method="POST" action="/user/book-room/book" >
+                {%csrf_token%}
+                {%load app_tags%}
+                <div class="form-group">
+                    <label for="username">Cubic:</label>
+                    <input type="text" class="form-control " id="hotel" name="hotel" disabled value={{room.hotel.name}}>
+                </div>
+                <div class="form-group">
+                    <label for="username">Location:</label>
+                    <input type="text" class="form-control " id="location" name="location" disabled value={{room.hotel.location}}>
+                </div>
+                <div class="form-group">
+                    <label for="person">Student Number:</label>
+                    <input type="text" class="form-control " id="username" name="username" required="true" value={{request.user}}>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address:</label>
+                    <input type="email" class="form-control " id="email" placeholder="Enter email address" name="email" required="True">
+                </div>
+                <div class="form-group">
+                    <label for="person">Person:</label>
+                    <input type="number" class="form-control " id="person" name="person" min="1" max={{room.capacity}} required="true" value={{room.capacity}}>
+                </div>
+                <div class="form-group">
+                    <label for="password2">Check-in:</label>
+                    <input class="form-control mr-sm-2" id="check_in" type="time" name="check_in" min="07:00" max="23:00" required/>
+                    <span class="validity"></span>
+                </div>
+                <div class="form-group">
+                    <label for="password2">Check-Out:</label>
+                    <input class="form-control mr-sm-2" id="check_out" type="time" name="check_out" min="07:00" max="23:00" required/>
+                    <span class="validity"></span>
+                </div>
+                <div class="form-group">
+                    <label for="username">Room Type:</label>
+                    <input type="text" class="form-control " id="roomtype" name="roomtype" disabled value={{room.get_room_type_display}}>
+                </div>
+                <div class="form-group">
+                    <label for="password2">Course:</label>
+                    <input type="text" class="form-control " id="price" placeholder="price " name="course" disabled value={{room.price}}>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary" name="submit_action">Book Now</button>
+                <input type="hidden" name="room_id" value={{room.id}}>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+            const input = document.createElement("input");
+        input.type = "time";
+        input.min = "23:00";
+        input.max = "01:00";
+        input.value = "23:59";
+
+        if (input.validity.valid && input.type === "time") {
+        // <input type=time> reversed range supported
+    }else {
+        // <input type=time> reversed range unsupported
+}
+
+</script>
+{% endblock body %}

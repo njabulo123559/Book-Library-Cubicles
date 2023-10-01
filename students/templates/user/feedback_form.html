@@ -1,0 +1,97 @@
+{% extends 'basic.html' %} {% block title %}Feedback {% endblock title %} {% block body %}
+
+<style>
+    /* CSS for the Feedback Form */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+form {
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 16px;
+}
+
+textarea {
+    height: 100px;
+}
+
+input[type="submit"] {
+    background-color: #007acc;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #005eaa;
+}
+
+/* Styles for the rating select element (you can customize this further) */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: url('down-arrow.png') no-repeat right center;
+    background-size: 20px;
+    padding-right: 30px;
+}
+
+
+</style>
+
+<h1>Feedback Form</h1>
+    <form method="post" action="{% url 'feedback_form' %}">
+        {% csrf_token %}
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        
+        <label for="email">Email (optional):</label>
+        <input type="email" id="email" name="email"><br><br>
+        
+        <label for="feedback">Feedback:</label><br>
+        <textarea id="feedback" name="feedback" rows="4" cols="50" required></textarea><br><br>
+        
+        <label for="rating">Rating:</label>
+        <select id="rating" name="rating" required>
+            <option value="1">1 Star</option>
+            <option value="2">2 Stars</option>
+            <option value="3">3 Stars</option>
+            <option value="4">4 Stars</option>
+            <option value="5">5 Stars</option>
+        </select><br><br>
+        
+        <input type="submit" value="Submit Feedback">
+    </form>
+
+{% endblock body %}
