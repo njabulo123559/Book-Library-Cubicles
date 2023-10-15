@@ -59,11 +59,19 @@
                         </li>
                     {% endif %}
 
-                    {% if user.is_authenticated %}
+                    {% if user.is_staff == False and user.is_authenticated %}
                     <li class="nav-item active">
                         <a href="{% url 'feedback_form' %}" class="btn" style="color:white; font-weight: bold; ">Feedback</a>
                     </li>
                     {% endif %}
+
+                    {% if user.is_staff == False  and user.is_authenticated %}
+                    <li class="nav-item active">
+                        <a href="{% url 'available_students' %}" class="btn" style="color:white; font-weight: bold; ">Invite</a>
+                    </li>
+                    {% endif %}
+
+
 
 
                     

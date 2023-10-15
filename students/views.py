@@ -1,6 +1,7 @@
 from django.shortcuts import render ,redirect
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponse , HttpResponseRedirect
-from .models import Cubicle,Rooms,Reservation
+from .models import Cubicle,Rooms,Reservation, Student
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
@@ -58,6 +59,8 @@ def contactpage(request):
 def user_sign_up(request):
     if request.method =="POST":
         user_name = request.POST['username']
+        email1 = request.POST['email']
+        first_name = request.POST['name']
         
         password1 = request.POST['password1']
         password2 = request.POST['password2']
@@ -74,7 +77,7 @@ def user_sign_up(request):
             pass
             
 
-        new_user = User.objects.create_user(username=user_name,password=password1)
+        new_user = User.objects.create_user(username=user_name,password=password1, email=email1, first_name=first_name)
         new_user.is_superuser=False
         new_user.is_staff=False
         new_user.save()
@@ -215,21 +218,20 @@ def add_new_room(request):
     if request.user.is_staff == False:
         return HttpResponse('Access Denied')
     if request.method == "POST":
-        total_rooms = len(Rooms.objects.all())
         new_room = Rooms()
         hotel = Cubicle.objects.all().get(id = int(request.POST['hotel']))
         print(f"id={hotel.id}")
         print(f"name={hotel.name}")
 
 
-        new_room.roomnumber = total_rooms + 1
+        new_room.roomnumber = request.POST['number']
         new_room.room_type  = request.POST['roomtype']
         new_room.capacity   = int(request.POST['capacity'])
         new_room.size       = int(request.POST['size'])
         new_room.capacity   = int(request.POST['capacity'])
         new_room.hotel      = hotel
         new_room.status     = request.POST['status']
-        new_room.course    = request.POST['price']
+    
 
         new_room.save()
         messages.success(request,"New Cubicle Added Successfully")
@@ -261,14 +263,22 @@ def book_room(request):
                 messages.warning(request,"Sorry This Cubicle is unavailable for Booking")
                 return redirect("homepage")
             
+
+        
+            
         if 'submit_action' in request.POST:
+
             user_email = request.POST['email']
             user_name = request.POST['username']
             user_time = request.POST['check_in']
 
+            current_user = request.user
+
+           
+
             #send email
             subject = 'Cubicle Booked'
-            message = f'Hello {user_name},  This is to notify you that your cubicle has been booked successfully.!!      Please make to sure to check-in via the front desk before {user_time} '
+            message = f'Hello {user_name},  This is to notify you that your cubicle,  has been booked successfully.!!\n\n  Please make sure to check-in via the front desk before {user_time}\n\nThank You. '
             recipient_list = [user_email]
 
             send_mail(subject, message, settings.EMAIL_HOST_USER, recipient_list, fail_silently=False )
@@ -359,7 +369,7 @@ def all_bookings(request):
 
 @login_required(login_url='/user')
 def send_email(request):
-    if request.method=="POST":
+    if request.method=="POST": 
         user_email = request.POST['email']
         user_name = request.POST['username']
         user_time = request.POST['check_in']
@@ -391,6 +401,50 @@ def feedback_form(request):
         form = FeedbackForm()
 
     return render(request, 'user/feedback_form.html', {'form': form})
+
+
+@login_required(login_url='/user')
+def available_students(request):
+    available_students = User.objects.filter()
+    return render(request, 'user/available_students.html', {'students': available_students})
+
+
+@login_required(login_url="/user")
+def send_invite_email(request):
+    
+        user_email = request.GET.get('email')
+        user_name = request.GET.get("username")
+
+
+        subject = 'Invitation to a Cubicle study '
+        message ='Hello \nYou have been invited by to a cubicle study partner\n please avail yourself at the library \n\nThank You'
+        recipient_list = [user_email]
+
+        send_mail(subject, message, settings.EMAIL_HOST_USER, recipient_list, fail_silently=False )
+
+
+        messages.success(request,"Congratulations! Invitation was Successfull")
+
+
+        return redirect("homepage")
+    
+    
+ 
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+    
+
     
 
 

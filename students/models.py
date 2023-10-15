@@ -30,7 +30,10 @@ class Rooms(models.Model):
     size = models.IntegerField()
     hotel = models.ForeignKey(Cubicle, on_delete = models.CASCADE)
     status = models.CharField(choices =ROOM_STATUS,max_length = 15)
-    roomnumber = models.IntegerField()
+    roomnumber = models.CharField(max_length=30)
+
+
+
     def __str__(self):
         return self.hotel.name
 
@@ -51,4 +54,13 @@ class Feedback(models.Model):
     feedback = models.TextField()
     rating = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
+
+
+class Student(models.Model):
+    name = models.CharField(max_length=100)
+    student_number = models.CharField(max_length=10, unique=True)
+    is_available = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
 

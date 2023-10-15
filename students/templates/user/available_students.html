@@ -1,0 +1,164 @@
+{% extends 'basic.html' %} {% block title %}Available Students {% endblock title %} {% block body %}
+
+<style>
+    /* Style the search container */
+.search-container {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Style the search input */
+#student-search {
+    width: 60%;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #b2f0c1; /* Set your desired background color here */
+    color: #333; /* Text color for the search input */
+}
+
+/* Style the search button */
+#search-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 16px;
+}
+
+/* Add hover effect for the search button */
+#search-button:hover {
+    background-color: #0056b3;
+}
+
+    /* Style the main heading */
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Style the student list */
+.student-list {
+    list-style: none;
+    padding: 0;
+}
+
+/* Style each student item */
+.student-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Style the student info section */
+.student-info {
+    flex: 1;
+    padding: 10px;
+}
+
+/* Style student name */
+.student-info h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+/* Style student number and email */
+.student-info p {
+    font-size: 14px;
+    color: #555;
+}
+
+/* Style the invite button section */
+.invite-button {
+    flex: 0 0 100px;
+    text-align: right;
+}
+
+/* Style the "Invite" button */
+.btn.yellow {
+    height: 40px;
+    width: 120px;
+    background-color: #f8cd33; /* Yellow background color */
+    color: #333; /* Text color for the button */
+    padding: 5px 10px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Add hover effect for the "Invite" button */
+.btn.yellow:hover {
+    background-color: #ffcd38; /* Yellow background color on hover */
+    color: #333; /* Text color for the button on hover */
+}
+
+/* Style the "No available students" message */
+.student-list-empty {
+    font-size: 16px;
+    color: #555;
+    margin-top: 20px;
+}
+
+    
+</style>
+<div class="search-container">
+    <input type="text" id="student-search" placeholder="Search by name">
+    <button id="search-button">Search</button>
+</div>
+{% with current_user=request.user %}
+<h1 class="text-center text-success">Available Students</h1>
+<ul class="student-list">
+    {% for student in students %}
+    {% if not student.is_staff and student != current_user %}
+        <li class="student-item" data-name="{{student.first_name}}">
+            <div class="student-info">
+                <h3>{{ student.first_name }}</h3>
+                <p>Student Number: {{ student.username }}</p>
+                {% if student.email %}
+                <p>Email: {{ student.email }}</p>
+                {% endif %}
+            </div>
+            <div class="invite-button">
+                <a href="{% url 'send_invite_email' %}?email={{ student.email }}&username={{student.username}}" class="btn yellow" name="invite">Invite</a>
+            </div>
+        </li>
+        {% endif %}
+    {% empty %}
+        <p>No available students at the moment.</p>
+    {% endfor %}
+</ul>
+{% endwith %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $("#search-button").on("click", function() {
+        var searchTerm = $("#student-search").val().toLowerCase();
+        
+        // Loop through each student and show/hide based on the search term
+        $(".student-item").each(function() {
+            var studentName = $(this).data("name").toLowerCase();
+            if (studentName.includes(searchTerm)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+});
+</script>
+
+{% endblock body %}

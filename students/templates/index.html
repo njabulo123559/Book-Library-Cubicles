@@ -109,6 +109,7 @@ footer {
 
        
 
+
 </style>
  <!--Booking Section starts here-->
 <section>
@@ -133,19 +134,19 @@ footer {
             {%load app_tags%}
             <div class="col-lg-2">
                 <label for="">Check in</label>
-                <input class="form-control mr-sm-2" id="appt-time" type="time" name="check_in" min="07:00" max="23:00" required/>
+                <input class="form-control mr-sm-2" id="check-in-time" type="time" name="check_in" min="07:00" max="23:00" required/>
                 <span class="validity"></span>
                 
             </div>
             <div class="col-lg-2">
                 <label for="">Check Out</label>
-                <input class="form-control mr-sm-2" id="appt-time" type="time" name="check_out" min="07:00" max="23:00" required/>
+                <input class="form-control mr-sm-2" id="check-out-time" type="time" name="check_out" min="07:00" max="23:00" required/>
                 <span class="validity"></span>
                 
             </div>
             <div class="col-lg-2">
                 <label for="">Person</label>
-                <input class="form-control mr-sm-2" type="number" placeholder="Person" name="capacity" aria-label="Search" required="True">
+                <input class="form-control mr-sm-2" type="number" placeholder="Person" min="1" max="2" name="capacity" aria-label="Search" required="True">
             </div>
             <div class="col-lg-2">
 
@@ -169,7 +170,7 @@ footer {
             <th>Type</th>
             <th>Location</th>
             <th>Person</th>
-            <th>Course</th>
+            <th>Cubicle Number</th>
             <th>Action</th>
         </thead>
         {% for r in rooms %}
@@ -177,7 +178,7 @@ footer {
             <td>{{ r.get_room_type_display }}</td>
             <td>{{ r.hotel.location }}</td>
             <td>{{ r.capacity }}</td>
-            <td>{{ r.price }}</td>
+            <td>{{ r.roomnumber }}</td>
             
             <td><a href="/user/book-room?roomid={{r.id}}"><button class="btn btn-warning">Book Now</button></a></td>
             </tr>
@@ -255,9 +256,9 @@ footer {
             <div class="row">
             <div class="footer-column">
                 <h3>Contact Us</h3>
-                <p>Email: contact@example.com</p>
+                <p>Email: unizulu@example.com</p>
                 <p>Phone: +1 (123) 456-7890</p>
-                <p>1234 Main St, City, Country</p>
+                <p>3880 Kwadlangeza, Empangeni Road</p>
             </div>
 
 
@@ -296,7 +297,7 @@ footer {
  
     
 
-    <script>
+<script>
         const input = document.createElement("input");
         input.type = "time";
         input.min = "23:00";
@@ -308,6 +309,28 @@ footer {
     }else {
         // <input type=time> reversed range unsupported
 }
+
+// Get references to the Check In and Check Out input elements
+var checkInInput = document.getElementById("check-in-time");
+var checkOutInput = document.getElementById("check-out-time");
+
+// Add an event listener to the Check Out input to check if it's before Check In
+checkOutInput.addEventListener("input", function () {
+        var checkInValue = checkInInput.valueAsDate;
+        var checkOutValue = checkOutInput.valueAsDate;
+
+        if (checkOutValue <= checkInValue) {
+            checkOutInput.setCustomValidity("Check Out time must be after Check In time.");
+        } else {
+            checkOutInput.setCustomValidity("");
+        }
+    });
+
+    // Add an event listener to the Check In input to clear the Check Out validity when Check In changes
+    checkInInput.addEventListener("input", function () {
+        checkOutInput.setCustomValidity("");
+    });
+
 
 
     </script>

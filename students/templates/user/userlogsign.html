@@ -2,6 +2,19 @@
 {% block title %}login
 {% endblock title %}
 {% block body %}
+<style>
+    .form-reset{
+        display:flex;
+        justify-content:center;
+        text-align:right;
+        
+        padding-bottom:40px
+        
+    }
+    .form-reset .form-check-label a{
+        text-align:left
+    }
+</style>
 <!--Cards starts here-->
 <div class="container py-5">
 
@@ -44,17 +57,23 @@
                                         {%csrf_token%}
                                         <div class="form-group">
                                             <label for="email">Student Number:</label>
-                                            <input type="text" class="form-control " id="email" placeholder="Enter student number" name="email">
+                                            <input type="text" class="form-control " id="email" placeholder="Enter student number" name="email" required pattern="[0-9]+" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="pwd">Password:</label>
-                                            <input type="password" class="form-control " id="pwd" placeholder="Enter password" name="pswd">
+                                            <input type="password" class="form-control " id="pwd" placeholder="Enter password" name="pswd" required>
                                         </div>
                                         <div class="form-group form-check">
                                             <label class="form-check-label">
                                                 <input class="form-check-input " type="checkbox" name="remember">
                                                 Remember me
                                             </label>
+                                           
+                                        </div>
+                                        <div class="form-reset">
+                                        <label class="form-check-label">
+                                            <a href="{% url 'password_reset' %}">Forgot password</a>
+                                        </label>
                                         </div>
                                         <button type="submit" class="btn btn-primary">Login</button>
                                     </form>
@@ -72,29 +91,29 @@
                                     <form action="/user/signup" method="post">
                                         <div class="form-group">
                                             <label for="pwd">Full Name:</label>
-                                            <input type="text" class="form-control " id="name" placeholder="Enter your full name" name="name">
+                                            <input type="text" class="form-control " id="name" placeholder="Enter your full name" name="name" required pattern="[A-Za-z\s]+" required>
                                         </div>
                                         <div class="form-group">
                                             {%csrf_token%}
                                             <label for="username">Student Number:</label>
-                                            <input type="text" class="form-control " id="username" placeholder="Enter student number" name="username">
+                                            <input type="text" class="form-control " id="username" placeholder="Enter student number" name="username" required pattern="[0-9]+" required>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="pwd">Password:</label>
-                                            <input type="password" class="form-control " id="password1" placeholder="Enter password" name="password1">
+                                            <input type="password" class="form-control " id="password1" placeholder="Enter password" name="password1" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="email">Email Address:</label>
-                                            <input type="email" class="form-control " id="email" placeholder="Enter email address" name="email">
+                                            <input type="email" class="form-control " id="email" placeholder="Enter email address" name="email" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="pwd">Confirm Password:</label>
-                                            <input type="password" class="form-control " id="password2" placeholder="Confirm password" name="password2">
+                                            <input type="password" class="form-control " id="password2" placeholder="Confirm password" name="password2" required>
                                         </div>
 
                                         <div class="form-group">
-                                            <input type="radio" name="gender" value="male"> Male
+                                            <input type="radio" name="gender" value="male" required> Male
                                             <input type="radio" name="gender" value="female"> Female                                            
                                         </div>
                                         <button type="submit" class="btn btn-primary">Sign Up</button>

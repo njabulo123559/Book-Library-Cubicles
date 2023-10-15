@@ -35,8 +35,8 @@ input:valid + span::after {
                 {%csrf_token%}
                 {%load app_tags%}   
                 <div class="form-group">
-                    <label for="username">Cubic:</label>
-                    <input type="text" class="form-control " id="hotel" name="hotel" disabled value={{room.hotel.name}}>
+                    <label for="username">Cubicle:</label>
+                    <input type="text" class="form-control " id="hotel" name="hotel" disabled value={{room.roomnumber}}>
                 </div>
                 <div class="form-group">
                     <label for="username">Location:</label>
@@ -56,12 +56,12 @@ input:valid + span::after {
                 </div>
                 <div class="form-group">
                     <label for="password2">Check-in:</label>
-                    <input class="form-control mr-sm-2" id="check_in" type="time" name="check_in" min="07:00" max="23:00" required/>
+                    <input class="form-control mr-sm-2" id="check-in-time" type="time" name="check_in" min="07:00" max="23:00" required/>
                     <span class="validity"></span>
                 </div>
                 <div class="form-group">
                     <label for="password2">Check-Out:</label>
-                    <input class="form-control mr-sm-2" id="check_out" type="time" name="check_out" min="07:00" max="23:00" required/>
+                    <input class="form-control mr-sm-2" id="check-out-time" type="time" name="check_out" min="07:00" max="23:00" required/>
                     <span class="validity"></span>
                 </div>
                 <div class="form-group">
@@ -70,7 +70,7 @@ input:valid + span::after {
                 </div>
                 <div class="form-group">
                     <label for="password2">Course:</label>
-                    <input type="text" class="form-control " id="price" placeholder="price " name="course" disabled value={{room.price}}>
+                    <input type="text" class="form-control " id="price" placeholder="Your course name " name="course" required>
                 </div>
 
 
@@ -94,6 +94,28 @@ input:valid + span::after {
     }else {
         // <input type=time> reversed range unsupported
 }
+
+
+    // Get references to the Check In and Check Out input elements
+    var checkInInput = document.getElementById("check-in-time");
+    var checkOutInput = document.getElementById("check-out-time");
+
+    // Add an event listener to the Check Out input to check if it's before Check In
+    checkOutInput.addEventListener("input", function () {
+        var checkInValue = checkInInput.valueAsDate;
+        var checkOutValue = checkOutInput.valueAsDate;
+
+        if (checkOutValue <= checkInValue) {
+            checkOutInput.setCustomValidity("Check Out time must be after Check In time.");
+        } else {
+            checkOutInput.setCustomValidity("");
+        }
+    });
+
+    // Add an event listener to the Check In input to clear the Check Out validity when Check In changes
+    checkInInput.addEventListener("input", function () {
+        checkOutInput.setCustomValidity("");
+    });
 
 </script>
 {% endblock body %}
